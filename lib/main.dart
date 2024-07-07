@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_learn_bloc/Cubit/counter_cubit.dart';
-import 'package:flutter_learn_bloc/Cubit/counter_event.dart';
-import 'package:flutter_learn_bloc/Cubit/counter_state.dart';
+import 'package:flutter_learn_bloc/Cubit/counter/counter_cubit.dart';
+import 'package:flutter_learn_bloc/Cubit/counter/counter_event.dart';
+import 'package:flutter_learn_bloc/Cubit/counter/counter_state.dart';
+import 'package:flutter_learn_bloc/Cubit/data/data_cubit.dart';
+import 'package:flutter_learn_bloc/Cubit/data/data_state.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+//?https://jsonplaceholder.typicode.com/posts
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CounterCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
+        BlocProvider<DataCubit>(create: (context) => DataCubit()..fetchData())
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -39,25 +46,46 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            // Text(
-            //   "${context.watch<CounterCubit>().state}",
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // )
-            //! Lub tak
-            BlocBuilder<CounterCubit, CounterState>(builder: (context, state) {
-              return Text(
-                '${state.counterValue}',
-                style: Theme.of(context).textTheme.headlineMedium,
-              );
-            }),
-          ],
+      body: BlocListener<CounterCubit, CounterState>(
+        listener: (context, state) {
+          if (state.counterValue == 5) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Counter is 5")));
+          }
+        },
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              BlocBuilder<DataCubit, DataState>(
+                builder: (context, state) {
+                  if (state is DataInitial || state is DataLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is DataLoaded) {
+                    return Text(state.data.toString());
+                  } else {
+                    return const Text("Error");
+                  }
+                },
+              ),
+
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              // Text(
+              //   "${context.watch<CounterCubit>().state}",
+              //   style: Theme.of(context).textTheme.headlineMedium,
+              // )
+              //! Lub tak
+              BlocBuilder<CounterCubit, CounterState>(
+                  builder: (context, state) {
+                return Text(
+                  '${state.counterValue}',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              }),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Row(
@@ -72,8 +100,12 @@ class MyHomePage extends StatelessWidget {
           ),
           FloatingActionButton(
             // onPressed: () => context.read<CounterCubit>().increment(),
-            onPressed: () =>
-                BlocProvider.of<CounterCubit>(context).add(CounterIncreement()),
+            onPressed: () {
+              BlocProvider.of<CounterCubit>(context).add(CounterIncreement());
+              var id =
+                  BlocProvider.of<CounterCubit>(context).state.counterValue;
+              BlocProvider.of<DataCubit>(context).fetchData(id: id + 1);
+            },
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
