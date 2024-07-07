@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_learn_bloc/Cubit/counter_cubit.dart';
+import 'package:flutter_learn_bloc/Cubit/counter_event.dart';
+import 'package:flutter_learn_bloc/Cubit/counter_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,24 +46,38 @@ class MyHomePage extends StatelessWidget {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              "${context.watch<CounterCubit>().state}",
-              style: Theme.of(context).textTheme.headlineMedium,
-            )
-            // BlocBuilder<CounterCubit, int>(builder: (context, state) {
-            //   return Text(
-            //     '$state',
-            //     style: Theme.of(context).textTheme.headlineMedium,
-            //   );
-            // }),
+            // Text(
+            //   "${context.watch<CounterCubit>().state}",
+            //   style: Theme.of(context).textTheme.headlineMedium,
+            // )
+            //! Lub tak
+            BlocBuilder<CounterCubit, CounterState>(builder: (context, state) {
+              return Text(
+                '${state.counterValue}',
+                style: Theme.of(context).textTheme.headlineMedium,
+              );
+            }),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // onPressed: () => context.read<CounterCubit>().increment(),
-        onPressed: () => BlocProvider.of<CounterCubit>(context).increment(),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            // onPressed: () => context.read<CounterCubit>().increment(),
+            onPressed: () =>
+                BlocProvider.of<CounterCubit>(context).add(CounterDecrement()),
+            tooltip: 'decrement',
+            child: const Icon(Icons.remove),
+          ),
+          FloatingActionButton(
+            // onPressed: () => context.read<CounterCubit>().increment(),
+            onPressed: () =>
+                BlocProvider.of<CounterCubit>(context).add(CounterIncreement()),
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
