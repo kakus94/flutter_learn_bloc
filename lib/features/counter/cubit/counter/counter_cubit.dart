@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_learn_bloc/Cubit/counter/counter_event.dart';
-import 'package:flutter_learn_bloc/Cubit/counter/counter_state.dart';
+import 'package:flutter_learn_bloc/features/counter/cubit/counter/counter_event.dart';
+import 'package:flutter_learn_bloc/features/counter/cubit/counter/counter_state.dart';
 
 class CounterCubit extends Bloc<CounterEvent, CounterState> {
   CounterCubit() : super(CounterInistail()) {

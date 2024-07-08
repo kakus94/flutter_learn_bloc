@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter_learn_bloc/data/remote_data_source.dart';
-import 'package:flutter_learn_bloc/model/post2_model/post2_model.dart';
+import 'package:flutter_learn_bloc/features/posts/data/remote_data_source.dart';
+import 'package:flutter_learn_bloc/features/posts/model/post2_model/post2_model.dart';
 
 class DataRepository {
   final RemoteDataSource _dataSource;

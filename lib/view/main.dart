@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_learn_bloc/Cubit/counter/counter_cubit.dart';
+import 'package:flutter_learn_bloc/features/counter/cubit/counter/counter_cubit.dart';
 
-import 'package:flutter_learn_bloc/Cubit/freezed_counter/freezed_data_cubit.dart';
-import 'package:flutter_learn_bloc/data/data_repository.dart';
-import 'package:flutter_learn_bloc/data/remote_data_source.dart';
-import 'package:flutter_learn_bloc/view/my_home_page.dart';
+import 'package:flutter_learn_bloc/features/posts/cubit/freezed_counter/freezed_data_cubit.dart';
+import 'package:flutter_learn_bloc/features/posts/data/data_repository.dart';
+import 'package:flutter_learn_bloc/features/posts/data/remote_data_source.dart';
+import 'package:flutter_learn_bloc/features/posts/view/my_home_page.dart';
 
 void main() {
   runApp(const MyApp());
