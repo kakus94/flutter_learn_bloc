@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_learn_bloc/Cubit/counter/counter_cubit.dart';
 import 'package:flutter_learn_bloc/Cubit/counter/counter_event.dart';
 import 'package:flutter_learn_bloc/Cubit/counter/counter_state.dart';
-import 'package:flutter_learn_bloc/Cubit/data/data_cubit.dart';
-import 'package:flutter_learn_bloc/Cubit/data/data_state.dart';
+
+import 'package:flutter_learn_bloc/Cubit/freezed_counter/freezed_data_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CounterCubit>(create: (context) => CounterCubit()),
-        BlocProvider<DataCubit>(create: (context) => DataCubit()..fetchData())
+        BlocProvider<FreezedDataCubit>(
+            create: (context) => FreezedDataCubit()..fetchData())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -57,15 +58,14 @@ class MyHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              BlocBuilder<DataCubit, DataState>(
+              BlocBuilder<FreezedDataCubit, FreezedDataState>(
                 builder: (context, state) {
-                  if (state is DataInitial || state is DataLoading) {
-                    return const CircularProgressIndicator();
-                  } else if (state is DataLoaded) {
-                    return Text(state.data.toString());
-                  } else {
-                    return const Text("Error");
-                  }
+                  return state.when(
+                    initial: () => const CircularProgressIndicator(),
+                    loading: () => const CircularProgressIndicator(),
+                    loaded: (value) => Text(value.toString()),
+                    error: () => const Text("Error"),
+                  );
                 },
               ),
 
@@ -102,9 +102,9 @@ class MyHomePage extends StatelessWidget {
             // onPressed: () => context.read<CounterCubit>().increment(),
             onPressed: () {
               BlocProvider.of<CounterCubit>(context).add(CounterIncreement());
-              var id =
+              final id =
                   BlocProvider.of<CounterCubit>(context).state.counterValue;
-              BlocProvider.of<DataCubit>(context).fetchData(id: id + 1);
+              BlocProvider.of<FreezedDataCubit>(context).fetchData(id: id + 1);
             },
             tooltip: 'Increment',
             child: const Icon(Icons.add),
