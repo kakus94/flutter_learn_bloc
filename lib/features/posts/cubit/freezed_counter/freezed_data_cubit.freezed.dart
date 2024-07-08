@@ -321,6 +321,8 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Post2Model data});
+
+  $Post2ModelCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -334,14 +336,22 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? data = freezed,
+    Object? data = null,
   }) {
     return _then(_$LoadedImpl(
-      freezed == data
+      null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as Post2Model,
     ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $Post2ModelCopyWith<$Res> get data {
+    return $Post2ModelCopyWith<$Res>(_value.data, (value) {
+      return _then(_value.copyWith(data: value));
+    });
   }
 }
 
@@ -363,12 +373,11 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            const DeepCollectionEquality().equals(other.data, data));
+            (identical(other.data, data) || other.data == data));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, data);
 
   @JsonKey(ignore: true)
   @override

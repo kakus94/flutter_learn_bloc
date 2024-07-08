@@ -2,10 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_learn_bloc/features/posts/data/data_repository.dart';
 import 'package:flutter_learn_bloc/features/posts/model/post2_model/post2_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
 
 part 'freezed_data_cubit.freezed.dart';
 part 'freezed_data_state.dart';
 
+@injectable
 class FreezedDataCubit extends Cubit<FreezedDataState> {
   FreezedDataCubit(this._dataRepository)
       : super(const FreezedDataState.initial());
